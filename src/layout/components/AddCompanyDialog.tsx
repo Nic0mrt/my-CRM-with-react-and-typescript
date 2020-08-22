@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { fetchAPI } from "../../utils/fetchAPI";
+import { postCompany } from "../../utils/fetchAPI";
 import {
   Button,
   Dialog,
@@ -35,7 +35,7 @@ export default function AddCompany(props: dialogProps) {
     phone: "",
     turnover: "",
     siret: "",
-    naf: "",
+    NAF: "",
     activity: "",
   });
 
@@ -62,7 +62,7 @@ export default function AddCompany(props: dialogProps) {
       case "address":
         setCompany({ ...company, address: event.target.value });
         break;
-      case "post-code":
+      case "postCode":
         setCompany({ ...company, postCode: event.target.value });
         break;
       case "phone":
@@ -74,8 +74,8 @@ export default function AddCompany(props: dialogProps) {
       case "siret":
         setCompany({ ...company, siret: event.target.value });
         break;
-      case "naf":
-        setCompany({ ...company, naf: event.target.value });
+      case "NAF":
+        setCompany({ ...company, NAF: event.target.value });
         break;
       case "activity":
         setCompany({ ...company, activity: event.target.value });
@@ -96,19 +96,18 @@ export default function AddCompany(props: dialogProps) {
         phone: company.phone,
         turnover: company.turnover,
         siret: company.siret,
-        naf: company.naf,
+        NAF: company.NAF,
         activity: company.activity,
       };
-      const data = await fetchAPI(
+      const response = await postCompany(
         "http://localhost:8000/companies",
-        "POST",
         companyToSend
       );
-      if (data.success) {
+      if (response.success) {
         setOpen(false);
         props.handleSavedCompany();
       } else {
-        alert(data.error);
+        alert(response.error.message);
       }
     }
   };
@@ -167,7 +166,7 @@ export default function AddCompany(props: dialogProps) {
               onChange={handleTextFieldChange}
             />
             <TextField
-              id="post-code"
+              id="postCode"
               label="Code Postal"
               onChange={handleTextFieldChange}
             />
@@ -182,7 +181,7 @@ export default function AddCompany(props: dialogProps) {
               onChange={handleTextFieldChange}
             />
             <TextField
-              id="naf"
+              id="NAF"
               label="Code NAF"
               onChange={handleTextFieldChange}
             />

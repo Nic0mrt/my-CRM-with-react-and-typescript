@@ -9,8 +9,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Pagination from "@material-ui/lab/Pagination";
 import TextField from "@material-ui/core/TextField";
+import { Button } from "@material-ui/core";
 import AddCompany from "./AddCompanyDialog";
-import { Link } from "react-router-dom";
+import FullScreenCompanyDialog from "./CompanyDialog";
 import { useState, useEffect } from "react";
 
 const useStyles = makeStyles({
@@ -41,6 +42,8 @@ const CustomerTab = (props: any) => {
   const [totalLength, setTotalLength] = useState(0);
   const [companies, setCompanies] = React.useState<any[]>([]);
   const [searchText, setSearchText] = React.useState("");
+  const [companySelected, setCompanySelected] = React.useState({});
+  const [isCompanyDialogOpen, setIsCompanyDialogOpen] = useState(false);
 
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
@@ -50,10 +53,19 @@ const CustomerTab = (props: any) => {
   };
 
   const handleSavedCompany = () => {
-    setPage(1);
+    if (page === 1) {
+      getCompanies();
+    } else {
+      setPage(1);
+    }
   };
 
-  const fetchFunction = () => {
+  const onFullDialogClosed = async () => {
+    await getCompanies();
+    setIsCompanyDialogOpen(false);
+  };
+
+  const getCompanies = () => {
     fetch(
       `http://localhost:8000/companies?page=${page}&type=${type}${
         searchText ? `&search=${searchText}` : ""
@@ -69,13 +81,13 @@ const CustomerTab = (props: any) => {
   useEffect(() => {
     const timeOutOnchange = setTimeout(() => {
       setPage(1);
-      fetchFunction();
+      getCompanies();
     }, 500);
     return () => clearTimeout(timeOutOnchange);
   }, [searchText]);
 
   useEffect(() => {
-    fetchFunction();
+    getCompanies();
   }, [page]);
 
   return (
@@ -91,6 +103,13 @@ const CustomerTab = (props: any) => {
           }}
         />
         <AddCompany role={type} handleSavedCompany={handleSavedCompany} />
+
+        {isCompanyDialogOpen ? (
+          <FullScreenCompanyDialog
+            company={companySelected}
+            onClose={onFullDialogClosed}
+          />
+        ) : null}
       </div>
 
       <TableContainer component={Paper}>
@@ -116,7 +135,15 @@ const CustomerTab = (props: any) => {
             {companies.map((company) => (
               <TableRow key={company._id}>
                 <TableCell component="th" scope="row">
-                  <Link to="/#">{company.name}</Link>
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      setCompanySelected(company);
+                      setIsCompanyDialogOpen(true);
+                    }}
+                  >
+                    {company.name}
+                  </Button>
                 </TableCell>
                 <TableCell align="right">{company.location.city}</TableCell>
                 <TableCell align="right">{company.location.postCode}</TableCell>
@@ -131,7 +158,11 @@ const CustomerTab = (props: any) => {
       <Pagination
         className={classes.pagination}
         page={page}
-        count={Math.trunc(totalLength / 10 + 1)}
+        count={
+          totalLength % 10 === 0
+            ? Math.trunc(totalLength / 10)
+            : Math.trunc(totalLength / 10 + 1)
+        }
         color="secondary"
         onChange={handleChange}
       />
