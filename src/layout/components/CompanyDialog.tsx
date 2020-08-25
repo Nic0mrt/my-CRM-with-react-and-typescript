@@ -15,6 +15,8 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { modifiyCompany, deleCompany } from "../../utils/fetchAPI";
+import ContactTable from "./ContactTable";
+import { AddCircleRounded } from "@material-ui/icons/";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,6 +41,13 @@ const useStyles = makeStyles((theme: Theme) =>
     gridItem: {
       display: "flex",
       flexDirection: "column",
+    },
+
+    titleh6: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      margin: "10px 0",
     },
 
     textField: {
@@ -200,90 +209,102 @@ export default function FullScreenCompanyDialog(props: Props) {
           </div>
         </Toolbar>
       </AppBar>
-      <Typography>
-        <DialogContent>
-          <div className={classes.dialogContent}>
-            <Grid container spacing={1}>
-              <Grid item sm={12} md={6} className={classes.gridItem}>
-                <TextField
-                  className={classes.textField}
-                  id="name"
-                  label="Nom"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.name}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="city"
-                  label="Ville"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.location?.city}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="address"
-                  label="Adresse"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.location?.address}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="postCode"
-                  label="Code Postal"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.location?.postCode}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="phone"
-                  label="Téléphone"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.phone}
-                />
-              </Grid>
-              <Grid item sm={12} md={6} className={classes.gridItem}>
-                <TextField
-                  className={classes.textField}
-                  id="turnover"
-                  label="Chiffre d'affaires"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.turnover}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="activity"
-                  label="Activité"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.activity}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="NAF"
-                  label="NAF"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company.NAF}
-                />
-                <TextField
-                  className={classes.textField}
-                  id="siret"
-                  label="SIRET"
-                  variant="outlined"
-                  onChange={handleChange}
-                  defaultValue={props.company?.siret}
-                />
-              </Grid>
+
+      <DialogContent>
+        <div className={classes.dialogContent}>
+          <Typography color="primary" variant="h6" className={classes.titleh6}>
+            Entreprise
+          </Typography>
+          <Grid container spacing={1}>
+            <Grid item sm={12} md={6} className={classes.gridItem}>
+              <TextField
+                className={classes.textField}
+                id="name"
+                label="Nom"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.name}
+              />
+              <TextField
+                className={classes.textField}
+                id="city"
+                label="Ville"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.location?.city}
+              />
+              <TextField
+                className={classes.textField}
+                id="address"
+                label="Adresse"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.location?.address}
+              />
+              <TextField
+                className={classes.textField}
+                id="postCode"
+                label="Code Postal"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.location?.postCode}
+              />
+              <TextField
+                className={classes.textField}
+                id="phone"
+                label="Téléphone"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.phone}
+              />
             </Grid>
-          </div>
-        </DialogContent>
-      </Typography>
+            <Grid item sm={12} md={6} className={classes.gridItem}>
+              <TextField
+                className={classes.textField}
+                id="turnover"
+                label="Chiffre d'affaires"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.turnover}
+              />
+              <TextField
+                className={classes.textField}
+                id="activity"
+                label="Activité"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.activity}
+              />
+              <TextField
+                className={classes.textField}
+                id="NAF"
+                label="NAF"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company.NAF}
+              />
+              <TextField
+                className={classes.textField}
+                id="siret"
+                label="SIRET"
+                variant="outlined"
+                onChange={handleChange}
+                defaultValue={props.company?.siret}
+              />
+            </Grid>
+          </Grid>
+        </div>
+
+        <Typography color="primary" variant="h6" className={classes.titleh6}>
+          Contacts
+          <AddCircleRounded
+            style={{ cursor: "pointer" }}
+            color="secondary"
+          ></AddCircleRounded>
+        </Typography>
+
+        <ContactTable contacts={props.company.contacts} />
+      </DialogContent>
     </Dialog>
   );
 }

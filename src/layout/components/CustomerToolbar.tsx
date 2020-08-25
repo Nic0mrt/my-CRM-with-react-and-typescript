@@ -1,6 +1,6 @@
 import React from "react";
 import { Tab, Tabs, Box, Paper } from "@material-ui/core";
-import CustomersTab from "../components/CustomersTab";
+import CustomersTable from "./CustomersTable";
 
 function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
@@ -29,7 +29,7 @@ function CustomerToolbar() {
     <div className="toolbar">
       <Paper>
         <Tabs
-          aria-label="simple tabs example"
+          aria-label="Menu Client Prospects"
           value={value}
           onChange={handleChange}
         >
@@ -39,10 +39,10 @@ function CustomerToolbar() {
       </Paper>
 
       <TabPanel value={value} index={0}>
-        <CustomersTab type="client"></CustomersTab>
+        <CustomersTable type="client"></CustomersTable>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CustomersTab type="prospect"></CustomersTab>
+        <CustomersTable type="prospect"></CustomersTable>
       </TabPanel>
     </div>
   );
