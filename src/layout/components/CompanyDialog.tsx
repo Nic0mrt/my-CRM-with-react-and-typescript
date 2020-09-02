@@ -11,12 +11,12 @@ import {
   Slide,
   Grid,
   TextField,
+  Paper,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { modifiyCompany, deleCompany } from "../../utils/fetchAPI";
 import ContactTable from "./ContactTable";
-import { AddCircleRounded } from "@material-ui/icons/";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,10 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "space-between",
     },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
+
     button: {
       marginLeft: "10px",
     },
@@ -81,6 +78,7 @@ export default function FullScreenCompanyDialog(props: Props) {
     siret: props.company.siret,
     NAF: props.company.NAF,
     activity: props.company.activity,
+    companyId: props.company._id,
   });
   const [isSaved, setisSaved] = React.useState(false);
 
@@ -179,16 +177,18 @@ export default function FullScreenCompanyDialog(props: Props) {
           </IconButton>
           <div style={{ display: "flex", alignItems: "center" }}>
             {isSaved ? (
-              <Typography
-                style={{
-                  backgroundColor: "green",
-                  color: "white",
-                  fontWeight: "bold",
-                  padding: "0 10px",
-                }}
-              >
-                Changements sauvegardés
-              </Typography>
+              <Paper>
+                <Typography
+                  style={{
+                    backgroundColor: "green",
+                    color: "white",
+                    fontWeight: "bold",
+                    padding: "0 10px",
+                  }}
+                >
+                  Changements sauvegardés
+                </Typography>
+              </Paper>
             ) : null}
             <Button
               className={classes.button}
@@ -216,7 +216,7 @@ export default function FullScreenCompanyDialog(props: Props) {
             Entreprise
           </Typography>
           <Grid container spacing={1}>
-            <Grid item sm={12} md={6} className={classes.gridItem}>
+            <Grid item xs={12} md={6} className={classes.gridItem}>
               <TextField
                 className={classes.textField}
                 id="name"
@@ -258,7 +258,7 @@ export default function FullScreenCompanyDialog(props: Props) {
                 defaultValue={props.company?.phone}
               />
             </Grid>
-            <Grid item sm={12} md={6} className={classes.gridItem}>
+            <Grid item xs={12} md={6} className={classes.gridItem}>
               <TextField
                 className={classes.textField}
                 id="turnover"
@@ -295,15 +295,10 @@ export default function FullScreenCompanyDialog(props: Props) {
           </Grid>
         </div>
 
-        <Typography color="primary" variant="h6" className={classes.titleh6}>
-          Contacts
-          <AddCircleRounded
-            style={{ cursor: "pointer" }}
-            color="secondary"
-          ></AddCircleRounded>
-        </Typography>
-
-        <ContactTable contacts={props.company.contacts} />
+        <ContactTable
+          contacts={props.company.contacts}
+          companyId={company.companyId}
+        />
       </DialogContent>
     </Dialog>
   );
