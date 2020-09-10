@@ -9,7 +9,6 @@ import {
   TableRow,
   Paper,
   Typography,
-  Button,
 } from "@material-ui/core";
 import CancelIcon from "@material-ui/icons/Cancel";
 import ModifyIcon from "@material-ui/icons/Create";
@@ -20,7 +19,6 @@ import {
 } from "../../utils/fetchAPI";
 
 import { Contact } from "../../models/Contact";
-import DialogDialog from "./ContactDialog";
 import ContactDialog from "./ContactDialog";
 
 const useStyles = makeStyles({
@@ -123,7 +121,7 @@ const ContactTable = (props: Props) => {
               <TableCell align="right">Mobile</TableCell>
               <TableCell align="right">Téléphone</TableCell>
               <TableCell align="right">Mail</TableCell>
-              <TableCell></TableCell>
+              <TableCell style={{ width: "150px" }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -17,6 +17,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { modifiyCompany, deleCompany } from "../../utils/fetchAPI";
 import ContactTable from "./ContactTable";
+import CommentsTable from "./CommentsTable";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -299,6 +300,8 @@ export default function FullScreenCompanyDialog(props: Props) {
           contacts={props.company.contacts}
           companyId={company.companyId}
         />
+
+        <CommentsTable comments={props.company.comments} />
       </DialogContent>
     </Dialog>
   );
