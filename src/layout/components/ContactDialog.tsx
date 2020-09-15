@@ -23,6 +23,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { TransitionProps } from "@material-ui/core/transitions";
 import { Contact } from "../../models/Contact";
 import { modifyContactWithId } from "../../utils/fetchAPI";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,6 +100,13 @@ const ContactDialog = (props: ContactDialogProps) => {
   const handleClose = () => {
     props.onClose();
   };
+
+  useEffect(() => {
+    let timer = setTimeout(() => setIsSaved(false), 5000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isSaved]);
 
   return (
     <Dialog

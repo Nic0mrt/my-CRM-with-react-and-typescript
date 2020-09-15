@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -21,6 +20,8 @@ import {
 import { Contact } from "../../models/Contact";
 import ContactDialog from "./ContactDialog";
 
+import React, { useEffect } from "react";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    margin: "10px 0",
+    margin: "30px 0",
   },
   modifyIcon: {
     cursor: "pointer",
@@ -42,13 +43,14 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  contacts: any;
+  contacts: [Contact];
   companyId: string;
+  onSavedContacts: () => void;
 }
 
 const ContactTable = (props: Props) => {
   const classes = useStyles();
-  const [contacts, setContacts] = React.useState<any[]>(props.contacts);
+  const [contacts, setContacts] = React.useState(props.contacts);
   const [contactSelected, setContactSelected] = React.useState<Contact>();
   const [isContactDialogOpen, setisContactDialogOpen] = React.useState(false);
 
@@ -61,10 +63,20 @@ const ContactTable = (props: Props) => {
     );
 
     if (response.success) {
-      await getNewListOfContacts();
+      getNewListOfContacts();
+      props.onSavedContacts();
     } else {
       alert("erreur dans la suppression du contact");
     }
+  };
+
+  const handleAfterContactsModified = () => {
+    getNewListOfContacts();
+    props.onSavedContacts();
+  };
+
+  const handleOnClosedContactDialog = () => {
+    setisContactDialogOpen(false);
   };
 
   const getNewListOfContacts = async () => {
@@ -80,25 +92,13 @@ const ContactTable = (props: Props) => {
     }
   };
 
-  const handleAfterContactAdded = () => {
-    getNewListOfContacts();
-  };
-
-  const handleOnSavedContact = () => {
-    getNewListOfContacts();
-  };
-
-  const handleOnClosedContactDialog = () => {
-    setisContactDialogOpen(false);
-  };
-
   return (
     <div>
       <Typography color="primary" variant="h6" className={classes.titleh6}>
         Contacts
         <AddContactDialog
           companyId={props.companyId}
-          onAddedContact={handleAfterContactAdded}
+          onAddedContact={handleAfterContactsModified}
         />
       </Typography>
       <TableContainer component={Paper}>
@@ -121,7 +121,7 @@ const ContactTable = (props: Props) => {
               <TableCell align="right">Mobile</TableCell>
               <TableCell align="right">Téléphone</TableCell>
               <TableCell align="right">Mail</TableCell>
-              <TableCell style={{ width: "150px" }}></TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -150,7 +150,7 @@ const ContactTable = (props: Props) => {
                     <ContactDialog
                       contact={contactSelected}
                       onClose={handleOnClosedContactDialog}
-                      onSaveContact={handleOnSavedContact}
+                      onSaveContact={handleAfterContactsModified}
                     />
                   ) : null}
 

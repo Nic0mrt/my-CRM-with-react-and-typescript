@@ -46,6 +46,16 @@ const AddContactDialog = (props: AddContactDialogProps) => {
   const [open, setOpen] = React.useState(false);
 
   const handleCloseDialog = () => {
+    setContact({
+      fistname: "",
+      name: "",
+      phone: "",
+      email: "",
+      mobile: "",
+      gender: "",
+      position: "",
+      companyId: props.companyId,
+    });
     setOpen(false);
   };
 
@@ -77,14 +87,18 @@ const AddContactDialog = (props: AddContactDialogProps) => {
 
   return (
     <div>
-      <AddCircleRounded
+      <Button
+        variant="contained"
         color="secondary"
-        fontSize="large"
+        size="small"
         onClick={() => {
           setOpen(true);
         }}
-        style={{ cursor: "pointer" }}
-      />
+      >
+        <div style={{ margin: "0 5px" }}> ajouter</div>
+        <AddCircleRounded fontSize="default" style={{ cursor: "pointer" }} />
+      </Button>
+
       <Dialog
         disableBackdropClick
         disableEscapeKeyDown

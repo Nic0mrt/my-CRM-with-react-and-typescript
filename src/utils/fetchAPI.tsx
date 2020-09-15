@@ -1,4 +1,5 @@
 import { Contact } from "../models/Contact";
+import { Comment } from "../models/Comment";
 
 const HTTPADRRESS = "http://localhost:8000";
 
@@ -96,6 +97,25 @@ export async function modifyContactWithId(
     },
     method: "PUT",
     body: JSON.stringify(contact),
+  });
+
+  const data = results.json();
+
+  return data;
+}
+
+export async function fetchApi(
+  url: string,
+  method: string,
+  body?: string | null
+) {
+  const results = await fetch(`${HTTPADRRESS + url}`, {
+    headers: {
+      Accept: "applicaiton/json",
+      "Content-Type": "application/json",
+    },
+    method: method,
+    body: body ? body : null,
   });
 
   const data = results.json();

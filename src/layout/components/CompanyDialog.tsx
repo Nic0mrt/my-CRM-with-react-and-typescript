@@ -15,9 +15,12 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { modifiyCompany, deleCompany } from "../../utils/fetchAPI";
+import { modifiyCompany, deleCompany, fetchApi } from "../../utils/fetchAPI";
 import ContactTable from "./ContactTable";
 import CommentsTable from "./CommentsTable";
+import CommentDialog from "./CommentDialog";
+import { useEffect } from "react";
+import { Contact } from "../../models/Contact";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,8 +83,11 @@ export default function FullScreenCompanyDialog(props: Props) {
     NAF: props.company.NAF,
     activity: props.company.activity,
     companyId: props.company._id,
+    contacts: props.company.contacts,
   });
-  const [isSaved, setisSaved] = React.useState(false);
+
+  const [contacts, setContacts] = React.useState<[Contact]>(company.contacts);
+  const [isSaved, setIsSaved] = React.useState(false);
 
   const handleClose = () => {
     props.onClose();
@@ -141,7 +147,7 @@ export default function FullScreenCompanyDialog(props: Props) {
       );
 
       if (response.success) {
-        setisSaved(true);
+        setIsSaved(true);
       } else {
         alert(response.error.message);
       }
@@ -158,6 +164,33 @@ export default function FullScreenCompanyDialog(props: Props) {
       alert(response.error.message);
     }
   };
+
+  const refreshContacts = async () => {
+    console.log(`/contacts/company/${company.companyId}`);
+
+    const response = await fetchApi(
+      `/contacts/company/${company.companyId}`,
+      "GET",
+      null
+    );
+    if (response.success) {
+      setContacts(response.data);
+    } else {
+      alert("error refresh contacts");
+    }
+  };
+
+  useEffect(() => {
+    "contacts changed";
+    return () => {};
+  }, [contacts]);
+
+  useEffect(() => {
+    let timer = setTimeout(() => setIsSaved(false), 5000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isSaved]);
 
   return (
     <Dialog
@@ -297,11 +330,16 @@ export default function FullScreenCompanyDialog(props: Props) {
         </div>
 
         <ContactTable
-          contacts={props.company.contacts}
+          contacts={contacts}
           companyId={company.companyId}
+          onSavedContacts={refreshContacts}
         />
 
-        <CommentsTable comments={props.company.comments} />
+        <CommentsTable
+          comments={props.company.comments}
+          company_id={company.companyId}
+          contacts={contacts}
+        />
       </DialogContent>
     </Dialog>
   );
